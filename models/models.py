@@ -14,16 +14,6 @@ class modelPelicula(BaseModel):
     año: int = Field(..., ge=1000, le=9999, description="Año debe tener 4 dígitos")
     Clasificacion: Clasificaciones
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "Titulo": "Godzilla",
-                "Genero": "Acción",
-                "año": 2000,
-                "Clasificacion": "B"
-            }
-        }
-
 class PeliculaDB(Base):
     __tablename__ = "peliculas"
     id = Column(Integer, primary_key=True, index=True)

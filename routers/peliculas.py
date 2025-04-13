@@ -5,6 +5,7 @@ from DB.conexion import get_db
 
 router = APIRouter(prefix="/peliculas", tags=["Películas CRUD"])
 
+#Endpoint para agregar pelicula
 @router.post("/")
 def agregar_pelicula(pelicula: modelPelicula, db: Session = Depends(get_db)):
     db_pelicula = db.query(PeliculaDB).filter(PeliculaDB.Titulo == pelicula.Titulo).first()
@@ -16,10 +17,12 @@ def agregar_pelicula(pelicula: modelPelicula, db: Session = Depends(get_db)):
     db.refresh(nueva)
     return {"mensaje": f"Película '{nueva.Titulo}' registrada exitosamente.", "pelicula": pelicula}
 
+#Enpoint para consultar todas las peliculas
 @router.get("/")
 def consultar_todas(db: Session = Depends(get_db)):
     return db.query(PeliculaDB).all()
 
+#Enpoint para obtener una sola pelicula por us titulo
 @router.get("/{titulo}")
 def consultar_pelicula(titulo: str, db: Session = Depends(get_db)):
     pelicula = db.query(PeliculaDB).filter(PeliculaDB.Titulo == titulo).first()
@@ -27,6 +30,7 @@ def consultar_pelicula(titulo: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Película no encontrada.")
     return pelicula
 
+#Enpoint para actulizar una pelicula
 @router.put("/{titulo}")
 def editar_pelicula(titulo: str, datos_actualizados: modelPelicula, db: Session = Depends(get_db)):
     pelicula = db.query(PeliculaDB).filter(PeliculaDB.Titulo == titulo).first()
@@ -39,6 +43,7 @@ def editar_pelicula(titulo: str, datos_actualizados: modelPelicula, db: Session 
     db.commit()
     return {"mensaje": f"Película '{titulo}' actualizada correctamente."}
 
+#Endpoint para eliminar una pelicula
 @router.delete("/{titulo}")
 def eliminar_pelicula(titulo: str, db: Session = Depends(get_db)):
     pelicula = db.query(PeliculaDB).filter(PeliculaDB.Titulo == titulo).first()
